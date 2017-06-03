@@ -105,10 +105,10 @@ bool sendQuery(byte addr, byte cmd1, byte cmd2, byte cmd3) {
   }
 }
 
-float *toFloat(byte byteValues[]) {
+float toFloat(byte byteValues[]) {
   byte switchOrder[4];
   float *floatValue;
-
+  
   switchOrder[0] = byteValues[5];
   switchOrder[1] = byteValues[4];
   switchOrder[2] = byteValues[3];
@@ -116,7 +116,7 @@ float *toFloat(byte byteValues[]) {
 
   floatValue = (float *)switchOrder;
 
-  return(floatValue);
+  return(*floatValue);
 }
 
 bool getGridPower(float *GridPower) {
@@ -125,7 +125,7 @@ bool getGridPower(float *GridPower) {
   
   if (sendQuery(pviAddr, 59, 3, 0))
     tempBuff = receiveAnswer();
-    *GridPower = *toFloat(tempBuff);
+    *GridPower = toFloat(tempBuff);
   if (recOk == true) 
     return true;
   else
