@@ -7,7 +7,7 @@
 SoftwareSerial RS485(rxPin, txPin);
 
 #define pviAddr 2  // address of the inverter (2 is the default)
-#define timeout 1000  // timeout of while receiving data in ms
+#define timeout 1000  // timeout while receiving data in ms
 
 boolean recOk; // stores info of receiving success or fail
 float GridPower;  // current power feeding to grid
@@ -74,6 +74,14 @@ byte receiveAnswer() {
   else
     Serial.println("Timeout while receiving data");
 
+ /* Serial.println("Values for Debugging: ");
+  for (i = 0; i < 8; i++) {
+    Serial.print(i);
+    Serial.print(". Wert: ");
+    Serial.print(recBuff[i]);
+    Serial.print(" ");
+  } */
+  
   return(recBuff);
 }
 
@@ -112,10 +120,12 @@ float *toFloat(byte byteValues[]) {
 }
 
 bool getGridPower(float *GridPower) {
+  byte tempBuff;
   recOk = false;
   
   if (sendQuery(pviAddr, 59, 3, 0))
-    *GridPower = *toFloat(receiveAnswer());
+    tempBuff = receiveAnswer();
+    *GridPower = *toFloat(tempBuff);
   if (recOk == true) 
     return true;
   else
@@ -132,9 +142,11 @@ void setup() {
 
 void loop() {
   if (getGridPower(&GridPower)) {
-    Serial.println("Current Power being fed to grid is:");
+    Serial.println("Current Power being fed to grid is: ");
     Serial.print(GridPower);
+    Serial.print(" Watts");
   }
   else
-    Serial.println("Error, please view above for details.");
+    Serial.println("Error, please look above for details.");
+  delay(1000);
 }
