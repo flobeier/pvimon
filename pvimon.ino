@@ -143,7 +143,7 @@ void setup() {
 
 void loop() {
   if (getGridPower(&GridPower)) {
-    Serial.println("Current power being fed to grid is: ");
+    Serial.println("Current power being produced is: ");
     Serial.print(GridPower);
     Serial.print(" Watts");
     Serial.println();
