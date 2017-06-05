@@ -47,7 +47,7 @@ unsigned int crc16(byte *data_p, byte length)
 }
 
 byte receiveAnswer() {
-  byte recBuff[] = { 0, 0, 0, 0, 0, 0, 0, 0 };  // receiving buffer, 8 bytes
+  byte recBuff[8];  // receiving buffer, 8 bytes
   unsigned int  recCRC;
   byte i;
   unsigned long startMillis, currentMillis;
@@ -120,12 +120,13 @@ float toFloat(byte byteValues[]) {
 }
 
 bool getGridPower(float *GridPower) {
-  byte tempBuff;
+  byte tmpBuff[8];
+  byte i;
   recOk = false;
   
   if (sendQuery(pviAddr, 59, 3, 0))
-    tempBuff = receiveAnswer();
-    *GridPower = toFloat(tempBuff);
+    tmpBuff[8] = receiveAnswer();
+    *GridPower = toFloat(tmpBuff);
   if (recOk == true) 
     return true;
   else
@@ -142,9 +143,11 @@ void setup() {
 
 void loop() {
   if (getGridPower(&GridPower)) {
-    Serial.println("Current Power being fed to grid is: ");
+    Serial.println("Current power being fed to grid is: ");
     Serial.print(GridPower);
     Serial.print(" Watts");
+    Serial.println();
+    Serial.println();
   }
   else
     Serial.println("Error, please look above for details.");
